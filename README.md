@@ -12,6 +12,9 @@ $ git clone github.com/go-meetup/wasm.git
 Follow-up:
 ------------
 $ git checkout step1
+
 $ git checkout step2
+
 $ git checkout step3
+
 ....

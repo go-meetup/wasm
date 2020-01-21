@@ -7,7 +7,7 @@ Golang 1.12, 1.13 will be better
 
 Start:
 ------------
-$ git clone github.com/go-meetup/wasm.git
+$ git clone https://github.com/go-meetup/wasm.git
 
 Follow-up:
 ------------

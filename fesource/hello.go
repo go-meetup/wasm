@@ -18,9 +18,45 @@ func main() {
 }
 
 func helloAgain(this js.Value, inputs []js.Value) interface{} {
-	ret := "Hello again:"
-	for _, inp := range inputs {
-		ret += "Mr. " + inp.String() + ", "
+
+	n := js.Global().Get("noneExistingVar")
+	printValue("noneExistingVar", n)
+
+	js.Global().Set("noneExistingVar", "1")
+	n = js.Global().Get("noneExistingVar")
+	printValue("noneExistingVar", n)
+
+	js.Global().Set("noneExistingVar", nil)
+	n = js.Global().Get("noneExistingVar")
+	printValue("noneExistingVar", n)
+
+	js.Global().Set("noneExistingVar", true)
+	n = js.Global().Get("noneExistingVar")
+	printValue("noneExistingVar", n)
+
+	a := js.Global().Get("alert")
+	a.Invoke("Long leave the Gopher !")
+
+	j := js.Global().Get("JSON")
+	ret := j.Call("parse", `{"name":"gopher", "age" : 10}`)
+
+	return ret
+}
+
+func printValue(name string, v js.Value) {
+	var ret string
+	if v == js.Undefined() {
+		ret = " is undefined"
+	} else if v == js.Null() {
+		ret = " is null"
+	} else if v.Type() == js.TypeBoolean {
+		ret = " bool value = " + fmt.Sprint(v.Bool())
+	} else if v.Type() == js.TypeNumber {
+		ret = " num value = " + fmt.Sprint(v.Float())
+	} else if v.Type() == js.TypeString {
+		ret = " str value = " + v.String()
+	} else {
+		//we can go on ...
 	}
-	return js.ValueOf(ret)
+	fmt.Println(name + ret)
 }

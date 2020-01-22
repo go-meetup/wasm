@@ -7,11 +7,28 @@
         WebAssembly.instantiateStreaming(fetch("hello.wasm"), go.importObject).then((result) => {
             go.run(result.instance);
         });
-        function drawButton(label) {
-            var btn = document.createElement("button");
-            var t = document.createTextNode(label);
+        function drawButton(label,alt) {
+            var btnText = label + alt.toString();
+            var btn = document.getElementById(label);
+            if (btn !== null){
+                btn.firstChild.nodeValue= btnText;
+                return;
+            }
+
+            btn = document.createElement("button");
+            btn.id = label;
+            var t = document.createTextNode(btnText);
             btn.appendChild(t);
             document.body.appendChild(btn);
+        }
+        function updateState() {
+            document.getElementById("replyInp").value=helloObject.timeCreated;
+            var elems = helloObject["elements"];
+            Object.keys(elems).forEach(function(key) {    //todo: validate
+                if (key !== "createdByGo" && key!=="creator"){
+                    drawButton(key,elems[key]);
+                }
+            });
         }
     </script>
 </head>

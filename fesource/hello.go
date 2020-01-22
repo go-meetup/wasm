@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"syscall/js"
+	"time"
 )
 
 var killSignal chan bool
@@ -17,10 +18,19 @@ func main() {
 	<-killSignal
 }
 
+var times int
+
 func helloAgain(this js.Value, inputs []js.Value) interface{} {
-	for _, inp := range inputs {
-		js.Global().Call("drawButton", inp)
+	times++
+	type object = map[string]interface{}
+	o := object{"createdByGo": true, "creator": "hello.go", "timeCreated": time.Now().Format(time.RFC3339)}
+	subs := object{}
+	for i, inp := range inputs {
+		subs[inp.String()] = i * times
 	}
+	o["elements"] = subs
+	js.Global().Set("helloObject", js.ValueOf(o)) //json.Marshal a struct could be considered
+	js.Global().Call("updateState")
 	return nil
 }
 

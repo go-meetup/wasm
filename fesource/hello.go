@@ -19,14 +19,7 @@ func main() {
 
 func helloAgain(this js.Value, inputs []js.Value) interface{} {
 	for _, inp := range inputs {
-		doc := js.Global().Get("document")
-		btn := doc.Call("createElement", "button")
-		btn.Set("innerHTML", inp.String())
-
-		a := js.Global().Get("buttonToInput")
-		btn.Call("addEventListener", "click", a)
-
-		doc.Get("body").Call("appendChild", btn)
+		js.Global().Call("drawButton", inp)
 	}
 	return nil
 }

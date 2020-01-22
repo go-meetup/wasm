@@ -7,8 +7,11 @@
         WebAssembly.instantiateStreaming(fetch("hello.wasm"), go.importObject).then((result) => {
             go.run(result.instance);
         });
-        function buttonToInput(caller){
-            document.getElementById("replyInp").value = caller.target.innerText;
+        function drawButton(label) {
+            var btn = document.createElement("button");
+            var t = document.createTextNode(label);
+            btn.appendChild(t);
+            document.body.appendChild(btn);
         }
     </script>
 </head>

@@ -2,43 +2,64 @@
 <head>
     <meta charset="utf-8"/>
     <script src="wasm_exec.js"></script>
+
     <script>
         const go = new Go();
-        WebAssembly.instantiateStreaming(fetch("hello.wasm"), go.importObject).then((result) => {
+        WebAssembly.instantiateStreaming(fetch("benchmark.wasm"), go.importObject).then((result) => {
             go.run(result.instance);
         });
-        function drawButton(label,alt) {
-            var btnText = label + alt.toString();
-            var btn = document.getElementById(label);
-            if (btn !== null){
-                btn.firstChild.nodeValue= btnText;
-                return;
-            }
 
-            btn = document.createElement("button");
-            btn.id = label;
-            var t = document.createTextNode(btnText);
-            btn.appendChild(t);
-            document.body.appendChild(btn);
+        function benchmark(jsFunc, goFunc, name) {
+            console.log(name);
+
+            goFunc();
+
+            var t0 = performance.now();
+            jsFunc();
+            console.log("js:", performance.now() - t0, " ms")
+
         }
-        function updateState() {
-            document.getElementById("replyInp").value=helloObject.timeCreated;
-            var elems = helloObject["elements"];
-            Object.keys(elems).forEach(function(key) {    //todo: validate
-                if (key !== "createdByGo" && key!=="creator"){
-                    drawButton(key,elems[key]);
-                }
-            });
+
+
+        function run1000000() {
+            for (var i = 0; i < 1000000; i++) {
+                // Do stuff with arr[i]
+            }
         }
+
+
+        function concat10000chars() {
+            var s;
+            for (var i = 0; i < 100000; i++) {
+                s += "s"
+            }
+            console.log(s.length)
+        }
+
+
+        function push10000() {
+            let mp = [];
+            for (var i = 0; i < 100000; i++) {
+                mp[i] = i
+            }
+        }
+
+
     </script>
 </head>
 <body>
-
-<button type="button" onclick="console.log(helloAgain('Jhon','Paul','George','Ringo'))"><span>Hello Again</span>
-</button>
-<button type="button" onclick="callgithub()"><span>call github</span></button>
-<input type="text" id="replyInp"/>
-<div id="replyDiv"/>
+<button type="button" onclick="benchmark(run1000000,runLoop1000000Go,'Loop1000000')">
+    <span> Loop1000000</span></button>
+</br>
+<button type="button" onclick="benchmark(concat10000chars,concat10000charsGo,'concat10000chars')">
+    <span> concat10000</span></button>
+</br>
+<button type="button" onclick="benchmark(concat10000chars,concat10000charsGo2,'concat10000chars')">
+    <span> concat10000take2</span></button>
+</br>
+<button type="button" onclick="benchmark(push10000,push10000Go,'push10000')">
+    <span> push10000</span></button>
+</br>
 
 
 </body>

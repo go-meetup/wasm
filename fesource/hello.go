@@ -36,9 +36,11 @@ func helloAgain(this js.Value, inputs []js.Value) interface{} {
 
 	a := js.Global().Get("alert")
 	a.Invoke("Long leave the Gopher !")
+	printValue("a", a)
 
 	j := js.Global().Get("JSON")
 	ret := j.Call("parse", `{"name":"gopher", "age" : 10}`)
+	printValue("j", j)
 
 	return ret
 }
@@ -55,8 +57,12 @@ func printValue(name string, v js.Value) {
 		ret = " num value = " + fmt.Sprint(v.Float())
 	} else if v.Type() == js.TypeString {
 		ret = " str value = " + v.String()
+	} else if v.Type() == js.TypeFunction {
+		ret = " is a func "
+	} else if v.Type() == js.TypeObject {
+		ret = " is an object "
 	} else {
-		//we can go on ...
+		ret = " is TBD "
 	}
 	fmt.Println(name + ret)
 }

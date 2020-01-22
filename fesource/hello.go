@@ -35,7 +35,9 @@ func helloAgain(this js.Value, inputs []js.Value) interface{} {
 	elem = d.Call("getElementById", "replyDiv")
 	elem.Set("innerHTML", "Hello <b>"+ret+"</b>")
 
-	return nil
+	b := elem.Call("querySelector", "b")
+
+	return b.Get("innerText")
 }
 
 func printValue(name string, v js.Value) {

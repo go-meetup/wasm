@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"syscall/js"
 	"time"
 )
@@ -15,7 +17,25 @@ func init() {
 func main() {
 	fmt.Println("Hello, WASM !!")
 	js.Global().Set("helloAgain", js.FuncOf(helloAgain))
+	js.Global().Set("callgithub", js.FuncOf(callgithub))
 	<-killSignal
+}
+
+func callgithub(this js.Value, inputs []js.Value) interface{} {
+	url := "https://api.github.com"
+	if resp, err := http.Get(url); err != nil {
+		fmt.Println(err.Error())
+	} else {
+		defer resp.Body.Close()
+		if bt, err := ioutil.ReadAll(resp.Body); err != nil {
+			fmt.Println(err.Error())
+		} else {
+			d := js.Global().Get("document")
+			elem := d.Call("getElementById", "replyDiv")
+			elem.Set("innerHTML", string(bt))
+		}
+	}
+	return nil
 }
 
 var times int

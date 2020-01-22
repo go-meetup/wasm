@@ -18,6 +18,8 @@ func main() {
 }
 
 func helloAgain(this js.Value, inputs []js.Value) interface{} {
-	fmt.Println("Hello again, WASM !!")
+	for _, inp := range inputs {
+		fmt.Println("Hello again, ", inp.String())
+	}
 	return nil
 }

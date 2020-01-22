@@ -7,6 +7,9 @@
         WebAssembly.instantiateStreaming(fetch("hello.wasm"), go.importObject).then((result) => {
             go.run(result.instance);
         });
+        function buttonToInput(caller){
+            document.getElementById("replyInp").value = caller.target.innerText;
+        }
     </script>
 </head>
 <body>

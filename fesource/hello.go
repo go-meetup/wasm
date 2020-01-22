@@ -22,6 +22,10 @@ func helloAgain(this js.Value, inputs []js.Value) interface{} {
 		doc := js.Global().Get("document")
 		btn := doc.Call("createElement", "button")
 		btn.Set("innerHTML", inp.String())
+
+		a := js.Global().Get("buttonToInput")
+		btn.Call("addEventListener", "click", a)
+
 		doc.Get("body").Call("appendChild", btn)
 	}
 	return nil

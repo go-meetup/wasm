@@ -22,19 +22,21 @@ func main() {
 }
 
 func callgithub(this js.Value, inputs []js.Value) interface{} {
-	url := "https://api.github.com"
-	if resp, err := http.Get(url); err != nil {
-		fmt.Println(err.Error())
-	} else {
-		defer resp.Body.Close()
-		if bt, err := ioutil.ReadAll(resp.Body); err != nil {
+	go func() {
+		url := "https://api.github.com"
+		if resp, err := http.Get(url); err != nil {
 			fmt.Println(err.Error())
 		} else {
-			d := js.Global().Get("document")
-			elem := d.Call("getElementById", "replyDiv")
-			elem.Set("innerHTML", string(bt))
+			defer resp.Body.Close()
+			if bt, err := ioutil.ReadAll(resp.Body); err != nil {
+				fmt.Println(err.Error())
+			} else {
+				d := js.Global().Get("document")
+				elem := d.Call("getElementById", "replyDiv")
+				elem.Set("innerHTML", string(bt))
+			}
 		}
-	}
+	}()
 	return nil
 }
 

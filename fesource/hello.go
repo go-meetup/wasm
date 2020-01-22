@@ -18,26 +18,13 @@ func main() {
 }
 
 func helloAgain(this js.Value, inputs []js.Value) interface{} {
-	var ret string
-	if len(inputs) == 0 {
-		ret = "no one"
-	} else {
-		for _, inp := range inputs {
-			ret += "," + inp.String()
-		}
-		ret = ret[1:]
+	for _, inp := range inputs {
+		doc := js.Global().Get("document")
+		btn := doc.Call("createElement", "button")
+		btn.Set("innerHTML", inp.String())
+		doc.Get("body").Call("appendChild", btn)
 	}
-
-	d := js.Global().Get("document")
-	elem := d.Call("getElementById", "replyInp")
-	elem.Set("value", ret)
-
-	elem = d.Call("getElementById", "replyDiv")
-	elem.Set("innerHTML", "Hello <b>"+ret+"</b>")
-
-	b := elem.Call("querySelector", "b")
-
-	return b.Get("innerText")
+	return nil
 }
 
 func printValue(name string, v js.Value) {

@@ -18,31 +18,24 @@ func main() {
 }
 
 func helloAgain(this js.Value, inputs []js.Value) interface{} {
+	var ret string
+	if len(inputs) == 0 {
+		ret = "no one"
+	} else {
+		for _, inp := range inputs {
+			ret += "," + inp.String()
+		}
+		ret = ret[1:]
+	}
 
-	n := js.Global().Get("noneExistingVar")
-	printValue("noneExistingVar", n)
+	d := js.Global().Get("document")
+	elem := d.Call("getElementById", "replyInp")
+	elem.Set("value", ret)
 
-	js.Global().Set("noneExistingVar", "1")
-	n = js.Global().Get("noneExistingVar")
-	printValue("noneExistingVar", n)
+	elem = d.Call("getElementById", "replyDiv")
+	elem.Set("innerHTML", "Hello <b>"+ret+"</b>")
 
-	js.Global().Set("noneExistingVar", nil)
-	n = js.Global().Get("noneExistingVar")
-	printValue("noneExistingVar", n)
-
-	js.Global().Set("noneExistingVar", true)
-	n = js.Global().Get("noneExistingVar")
-	printValue("noneExistingVar", n)
-
-	a := js.Global().Get("alert")
-	a.Invoke("Long leave the Gopher !")
-	printValue("a", a)
-
-	j := js.Global().Get("JSON")
-	ret := j.Call("parse", `{"name":"gopher", "age" : 10}`)
-	printValue("j", j)
-
-	return ret
+	return nil
 }
 
 func printValue(name string, v js.Value) {
